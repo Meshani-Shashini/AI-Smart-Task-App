@@ -6,6 +6,7 @@ import { SettingsPanel } from './SettingsPanel';
 interface HeaderProps {
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
+  onOpenProfile?: () => void;
   taskCount: number;
   completedCount: number;
   user: User;
@@ -18,7 +19,7 @@ interface HeaderProps {
 }
 
 export function Header({
-  theme, onToggleTheme, taskCount, completedCount, user, onLogout, tasks,
+  theme, onToggleTheme, onOpenProfile, taskCount, completedCount, user, onLogout, tasks,
   notifPermission, notifEnabled, onEnableNotif, onDisableNotif,
 }: HeaderProps) {
   const [notifOpen, setNotifOpen] = useState(false);
@@ -77,10 +78,18 @@ export function Header({
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="hidden sm:block text-right mr-1">
-              <p className="text-xs text-slate-400 dark:text-slate-500">Hello,</p>
-              <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{user.name}</p>
-            </div>
+            <button
+              onClick={onOpenProfile}
+              className="hidden sm:flex items-center gap-3 rounded-xl bg-slate-100/80 dark:bg-slate-800/80 px-2.5 py-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            >
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white text-xs font-bold">
+                {initials}
+              </div>
+              <div className="text-left">
+                <p className="text-[10px] text-slate-400 dark:text-slate-500">Hello,</p>
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 truncate max-w-[120px]">{user.name}</p>
+              </div>
+            </button>
 
             {/* Notifications */}
             <div className="relative" ref={notifRef}>
@@ -171,6 +180,15 @@ export function Header({
                       </span>
                     )}
                   </div>
+                  <button
+                    onClick={() => {
+                      setProfileOpen(false);
+                      onOpenProfile?.();
+                    }}
+                    className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors border-b border-slate-200 dark:border-slate-700"
+                  >
+                    View Profile
+                  </button>
                   <button
                     onClick={onLogout}
                     className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-slate-600 dark:text-slate-300 hover:bg-error-50 dark:hover:bg-error-950/40 hover:text-error-600 dark:hover:text-error-400 transition-colors"

@@ -4,7 +4,7 @@ import { AuthModal } from './AuthModal';
 import { useTheme } from '@/hooks/useTheme';
 
 interface LandingPageProps {
-  onLogin: (email: string, password: string) => boolean;
+  onLogin: (email: string, password: string, fullName?: string) => boolean;
   onGuestLogin: () => void;
 }
 
@@ -196,7 +196,9 @@ export function LandingPage({ onLogin, onGuestLogin }: LandingPageProps) {
 
       <AuthModal
         open={authOpen}
+        mode={authMode}
         onClose={() => setAuthOpen(false)}
+        onModeChange={setAuthMode}
         onLogin={onLogin}
         onGuestLogin={onGuestLogin}
       />

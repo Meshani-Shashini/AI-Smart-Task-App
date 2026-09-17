@@ -49,13 +49,13 @@ export function TaskPreviewCard({ task, onConfirm, onDismiss }: TaskPreviewCardP
       <div className="p-4 space-y-3">
         {/* Title */}
         <div>
-          <label className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1 block">Title</label>
+          <label className="text-xs font-medium text-slate-600 dark:text-slate-300 mb-1 block">Title</label>
           {isEditing ? (
             <input
               type="text"
               value={display.title}
               onChange={(e) => handleFieldChange('title', e.target.value)}
-              className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
+              className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
             />
           ) : (
             <p className="text-sm font-medium text-slate-900 dark:text-white">{display.title}</p>
@@ -64,8 +64,8 @@ export function TaskPreviewCard({ task, onConfirm, onDismiss }: TaskPreviewCardP
 
         {/* Category */}
         <div className="flex items-center gap-2">
-          <Tag className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-          <label className="text-xs font-medium text-slate-500 dark:text-slate-400">Category:</label>
+          <Tag className="w-3.5 h-3.5 text-slate-500 dark:text-slate-300 flex-shrink-0" />
+          <label className="text-xs font-medium text-slate-600 dark:text-slate-300">Category:</label>
           {isEditing ? (
             <select
               value={display.category}
@@ -83,8 +83,8 @@ export function TaskPreviewCard({ task, onConfirm, onDismiss }: TaskPreviewCardP
 
         {/* Date */}
         <div className="flex items-center gap-2">
-          <Calendar className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-          <label className="text-xs font-medium text-slate-500 dark:text-slate-400">Date:</label>
+          <Calendar className="w-3.5 h-3.5 text-slate-500 dark:text-slate-300 flex-shrink-0" />
+          <label className="text-xs font-medium text-slate-600 dark:text-slate-300">Date:</label>
           {isEditing ? (
             <input
               type="date"
@@ -93,14 +93,14 @@ export function TaskPreviewCard({ task, onConfirm, onDismiss }: TaskPreviewCardP
               className="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 outline-none"
             />
           ) : (
-            <span className="text-sm text-slate-700 dark:text-slate-300">{display.due_date || 'No date'}</span>
+            <span className="text-sm text-slate-700 dark:text-slate-200">{display.due_date || 'No date'}</span>
           )}
         </div>
 
         {/* Time */}
         <div className="flex items-center gap-2">
-          <Clock className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-          <label className="text-xs font-medium text-slate-500 dark:text-slate-400">Time:</label>
+          <Clock className="w-3.5 h-3.5 text-slate-500 dark:text-slate-300 flex-shrink-0" />
+          <label className="text-xs font-medium text-slate-600 dark:text-slate-300">Time:</label>
           {isEditing ? (
             <input
               type="time"
@@ -109,14 +109,14 @@ export function TaskPreviewCard({ task, onConfirm, onDismiss }: TaskPreviewCardP
               className="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 outline-none"
             />
           ) : (
-            <span className="text-sm text-slate-700 dark:text-slate-300">{display.due_time || 'No time'}</span>
+            <span className="text-sm text-slate-700 dark:text-slate-200">{display.due_time || 'No time'}</span>
           )}
         </div>
 
         {/* Priority */}
         <div className="flex items-center gap-2">
-          <AlertCircle className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-          <label className="text-xs font-medium text-slate-500 dark:text-slate-400">Priority:</label>
+          <AlertCircle className="w-3.5 h-3.5 text-slate-500 dark:text-slate-300 flex-shrink-0" />
+          <label className="text-xs font-medium text-slate-600 dark:text-slate-300">Priority:</label>
           {isEditing ? (
             <select
               value={display.priority}
@@ -128,7 +128,7 @@ export function TaskPreviewCard({ task, onConfirm, onDismiss }: TaskPreviewCardP
               ))}
             </select>
           ) : (
-            <span className="text-sm text-slate-700 dark:text-slate-300 capitalize">{display.priority}</span>
+            <span className="text-sm text-slate-700 dark:text-slate-200 capitalize">{display.priority}</span>
           )}
         </div>
 

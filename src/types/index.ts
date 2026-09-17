@@ -7,6 +7,8 @@ export interface User {
   name: string;
   email: string;
   isGuest: boolean;
+  joinedAt?: string;
+  role?: 'Guest' | 'Personal User';
 }
 
 export interface Task {
@@ -20,6 +22,7 @@ export interface Task {
   completed: boolean;
   created_at: string;
   updated_at: string;
+  user_email?: string | null;
 }
 
 export type TaskInsert = Omit<Task, 'id' | 'created_at' | 'updated_at'>;

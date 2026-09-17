@@ -1,21 +1,26 @@
 import { useState, useEffect } from 'react';
 import { Sparkles, X, Mail, Lock, User as UserIcon, ArrowRight, Loader2 } from 'lucide-react';
-import type { User } from '@/types';
 
 interface AuthModalProps {
   open: boolean;
+  mode: 'login' | 'register';
   onClose: () => void;
-  onLogin: (email: string, password: string) => boolean;
+  onModeChange: (mode: 'login' | 'register') => void;
+  onLogin: (email: string, password: string, name?: string) => boolean;
   onGuestLogin: () => void;
 }
 
-export function AuthModal({ open, onClose, onLogin, onGuestLogin }: AuthModalProps) {
-  const [mode, setMode] = useState<'login' | 'register'>('login');
+export function AuthModal({ open, mode, onClose, onModeChange, onLogin, onGuestLogin }: AuthModalProps) {
+  const [internalMode, setInternalMode] = useState<'login' | 'register'>(mode);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setInternalMode(mode);
+  }, [mode]);
 
   useEffect(() => {
     if (open) {
@@ -35,7 +40,7 @@ export function AuthModal({ open, onClose, onLogin, onGuestLogin }: AuthModalPro
       return;
     }
 
-    if (mode === 'register' && !name.trim()) {
+    if (internalMode === 'register' && !name.trim()) {
       setError('Please enter your name');
       return;
     }
@@ -52,7 +57,7 @@ export function AuthModal({ open, onClose, onLogin, onGuestLogin }: AuthModalPro
 
     setLoading(true);
     await new Promise((r) => setTimeout(r, 700));
-    const success = onLogin(email, password);
+    const success = onLogin(email, password, internalMode === 'register' ? name.trim() : undefined);
     setLoading(false);
 
     if (!success) {
@@ -87,17 +92,17 @@ export function AuthModal({ open, onClose, onLogin, onGuestLogin }: AuthModalPro
             </div>
             <div>
               <h2 className="text-xl font-bold text-white">
-                {mode === 'login' ? 'Welcome Back' : 'Create Account'}
+                {internalMode === 'login' ? 'Welcome Back' : 'Create Account'}
               </h2>
               <p className="text-sm text-white/70">
-                {mode === 'login' ? 'Sign in to SmartRemind AI' : 'Join SmartRemind AI today'}
+                {internalMode === 'login' ? 'Sign in to SmartRemind AI' : 'Join SmartRemind AI today'}
               </p>
             </div>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
-          {mode === 'register' && (
+          {internalMode === 'register' && (
             <div>
               <label className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5 block">Full Name</label>
               <div className="relative">
@@ -142,7 +147,7 @@ export function AuthModal({ open, onClose, onLogin, onGuestLogin }: AuthModalPro
           </div>
 
           {error && (
-            <p className="text-sm text-error-500 bg-error-50 dark:bg-error-950/40 px-3 py-2 rounded-lg animate-fade-in">
+            <p className="text-sm text-red-500 bg-red-50 dark:bg-red-950/40 px-3 py-2 rounded-lg animate-fade-in">
               {error}
             </p>
           )}
@@ -156,7 +161,7 @@ export function AuthModal({ open, onClose, onLogin, onGuestLogin }: AuthModalPro
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <>
-                {mode === 'login' ? 'Sign In' : 'Create Account'}
+                {internalMode === 'login' ? 'Sign In' : 'Create Account'}
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -181,16 +186,18 @@ export function AuthModal({ open, onClose, onLogin, onGuestLogin }: AuthModalPro
           </button>
 
           <p className="text-center text-sm text-slate-500 dark:text-slate-400">
-            {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
+            {internalMode === 'login' ? "Don't have an account? " : 'Already have an account? '}
             <button
               type="button"
               onClick={() => {
-                setMode(mode === 'login' ? 'register' : 'login');
+                const nextMode = internalMode === 'login' ? 'register' : 'login';
+                setInternalMode(nextMode);
+                onModeChange(nextMode);
                 setError('');
               }}
               className="text-primary-600 dark:text-primary-400 font-semibold hover:underline"
             >
-              {mode === 'login' ? 'Sign up' : 'Sign in'}
+              {internalMode === 'login' ? 'Sign up' : 'Sign in'}
             </button>
           </p>
         </form>

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Sparkles } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { FilterBar } from '@/components/FilterBar';
@@ -9,6 +9,7 @@ import { AIAgentModal } from '@/components/AIAgentModal';
 import { ToastContainer } from '@/components/ToastContainer';
 import { StatsOverview } from '@/components/StatsOverview';
 import { LandingPage } from '@/components/LandingPage';
+import { UserProfilePage } from '@/components/UserProfilePage';
 import { useTasks } from '@/hooks/useTasks';
 import { useTheme } from '@/hooks/useTheme';
 import { useToast } from '@/hooks/useToast';
@@ -18,13 +19,21 @@ import type { Category, ParsedTask, Priority, Task } from '@/types';
 
 function App() {
   const { theme, toggleTheme } = useTheme();
-  const { user, loading: authLoading, login, guestLogin, logout } = useAuth();
+  const { user, loading: authLoading, login, guestLogin, logout, updateUser } = useAuth();
   const { tasks, loading: tasksLoading, addTask, addMultipleTasks, toggleComplete, deleteTask } = useTasks();
   const { toasts, showToast, dismiss } = useToast();
   const { permission: notifPermission, requestPermission, disableNotifications, isEnabled: notifEnabled } = useNotifications(user ? tasks : []);
 
   const [activeCategory, setActiveCategory] = useState<Category | 'All'>('All');
   const [aiOpen, setAiOpen] = useState(false);
+  const [currentView, setCurrentView] = useState<'dashboard' | 'profile'>(() => {
+    if (typeof window === 'undefined') return 'dashboard';
+    return localStorage.getItem('smartremind_view') === 'profile' ? 'profile' : 'dashboard';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('smartremind_view', currentView);
+  }, [currentView]);
 
   const categoryCounts = useMemo(() => {
     const result: Record<string, number> = {};
@@ -82,9 +91,10 @@ function App() {
     );
   }, [addMultipleTasks, showToast]);
 
-  const handleLogin = useCallback((email: string, password: string): boolean => {
-    const success = login(email, password);
+  const handleLogin = useCallback((email: string, password: string, fullName?: string): boolean => {
+    const success = login(email, password, fullName);
     if (success) {
+      setCurrentView('dashboard');
       showToast(`Welcome to SmartRemind AI!`, 'success');
     }
     return success;
@@ -96,6 +106,7 @@ function App() {
   }, [guestLogin, showToast]);
 
   const handleLogout = useCallback(() => {
+    setCurrentView('dashboard');
     logout();
     showToast('Signed out successfully', 'info');
   }, [logout, showToast]);
@@ -115,6 +126,36 @@ function App() {
     return <LandingPage onLogin={handleLogin} onGuestLogin={handleGuestLogin} />;
   }
 
+  if (currentView === 'profile') {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors">
+        <Header
+          theme={theme}
+          onToggleTheme={toggleTheme}
+          taskCount={tasks.length}
+          completedCount={tasks.filter((t) => t.completed).length}
+          user={user}
+          onLogout={handleLogout}
+          onOpenProfile={() => setCurrentView('profile')}
+          tasks={tasks}
+          notifPermission={notifPermission}
+          notifEnabled={notifEnabled}
+          onEnableNotif={requestPermission}
+          onDisableNotif={disableNotifications}
+        />
+        <UserProfilePage
+          user={user}
+          tasks={tasks}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+          onLogout={handleLogout}
+          onBack={() => setCurrentView('dashboard')}
+          onUpdateProfile={updateUser}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors">
       <Header
@@ -124,6 +165,7 @@ function App() {
         completedCount={tasks.filter((t) => t.completed).length}
         user={user}
         onLogout={handleLogout}
+        onOpenProfile={() => setCurrentView('profile')}
         tasks={tasks}
         notifPermission={notifPermission}
         notifEnabled={notifEnabled}

@@ -31,7 +31,7 @@ export function QuickAddBar({ onAdd }: QuickAddBarProps) {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as Category)}
-              className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-primary-500 outline-none"
+              className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-100 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-primary-500 outline-none"
             >
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>{c}</option>
@@ -40,7 +40,7 @@ export function QuickAddBar({ onAdd }: QuickAddBarProps) {
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value as Priority)}
-              className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-primary-500 outline-none capitalize"
+              className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-100 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-primary-500 outline-none capitalize"
             >
               {PRIORITIES.map((p) => (
                 <option key={p} value={p}>{p}</option>
